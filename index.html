@@ -73,7 +73,7 @@
       <div class="modal">
         <div id="form">
           <h2>Nova transação</h2>
-          <form action="">
+          <form onsubmit="Form.submit(event)">
             <div class="input-group">
               <label class="sr-only" for="description">Descrição</label>
               <input
@@ -118,6 +118,7 @@
     </footer>
 
     <script src="./models/Transaction.js"></script>
+    <script src="./temp.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>

@@ -1,10 +1,3 @@
-// Objetos testes
-let t1 = new Transaction("Luz", -70050, new Date());
-let t2 = new Transaction("Agua", -38755, new Date());
-let t3 = new Transaction("Salario", 280000, new Date());
-
-const transactions = [t1, t2, t3];
-
 const Modal = {
   open() {
     document.getElementById("modal").classList.add("active");
@@ -15,25 +8,49 @@ const Modal = {
   },
 };
 
+const Storage = {
+  get() {
+    return JSON.parse(localStorage.getItem("dev.finance:transactions")) || [];
+  },
+  set(transaction) {
+    localStorage.setItem(
+      "dev.finance:transactions",
+      JSON.stringify(transaction)
+    );
+  },
+};
+
 const TransactionHandler = {
-  all: transactions,
+  all: Storage.get(),
 
   add(transaction) {
     TransactionHandler.all.push(transaction);
+    App.reload();
+  },
+
+  remove(index) {
+    TransactionHandler.all.splice(index, 1);
+    App.reload();
   },
 
   expenses() {
-    return TransactionHandler.all
+    let expensesData = TransactionHandler.all
       .map((x) => x.amount)
-      .filter((x) => x < 0)
-      .reduce((sum, x) => sum + x);
+      .filter((x) => x < 0);
+    if (expensesData.length > 0) {
+      return expensesData.reduce((sum, x) => sum + x);
+    }
+    return 0;
   },
 
   incomes() {
-    return TransactionHandler.all
+    let incomesData = TransactionHandler.all
       .map((x) => x.amount)
-      .filter((x) => x > 0)
-      .reduce((sum, x) => sum + x);
+      .filter((x) => x > 0);
+    if (incomesData.length > 0) {
+      return incomesData.reduce((sum, x) => sum + x);
+    }
+    return 0;
   },
 
   total() {
@@ -42,22 +59,25 @@ const TransactionHandler = {
 };
 
 const DOM = {
-  addTransaction(transaction) {
+  containerBody: document.getElementById("transactions-body"),
+
+  addTransaction(transaction, index) {
+    // Cria o elemento <tr>
     const tr = document.createElement("tr");
-    tr.innerHTML = this.innerHTMLTransacation(transaction);
-    const tbody = document.getElementById("transactions-body");
-    tbody.appendChild(tr);
+    tr.innerHTML = this.innerHTMLTransacation(transaction, index);
+
+    this.containerBody.appendChild(tr);
   },
 
-  innerHTMLTransacation(transaction) {
+  innerHTMLTransacation(transaction, index) {
+    const cssClass = transaction.amount > 0 ? "income" : "expense";
+
     const html = `
     <td class="description">${transaction.description}</td>
-    <td class="${
-      transaction.amount > 0 ? "income" : "expense"
-    }">${Utils.formatCurrency(transaction.amount)}</td>
-    <td class="date">${transaction.date.toLocaleDateString()}</td>
+    <td class="${cssClass}">${Utils.formatCurrency(transaction.amount)}</td>
+    <td class="date">${transaction.date}</td>
     <td>
-      <a href="#"><img src="./assets/minus.svg" alt="Remover" /></a>
+      <a href="#"><img src="./assets/minus.svg" alt="Remover" onclick="TransactionHandler.remove(${index})" /></a>
     </td>
     `;
 
@@ -75,16 +95,30 @@ const DOM = {
       TransactionHandler.total()
     );
   },
+
+  clearTransactions() {
+    this.containerBody.innerHTML = "";
+  },
 };
 
 const Utils = {
+  formatDate(value) {
+    const splittedDate = value.split("-");
+    return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`;
+  },
+
+  formatAmount(value) {
+    value = Number(value.replace(/\,\./g, "")) * 100;
+    return value;
+  },
+
   formatCurrency(value) {
     let signal = Number(value) < 0 ? "-" : "";
 
     value = String(value).replace(/\D/g, "");
 
     value = Number(value) / 100;
-    console.log(value);
+
     value = value.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
@@ -94,8 +128,83 @@ const Utils = {
   },
 };
 
-transactions.forEach((element) => {
-  DOM.addTransaction(element);
-});
+const Form = {
+  description: document.getElementById("description"),
+  amount: document.getElementById("amount"),
+  date: document.getElementById("date"),
 
-DOM.updateBalance();
+  getValues() {
+    return {
+      description: Form.description.value,
+      amount: Form.amount.value,
+      date: Form.date.value,
+    };
+  },
+
+  validateFields() {
+    const { description, amount, date } = this.getValues();
+
+    if (
+      description.trim() === "" ||
+      amount.trim() === "" ||
+      date.trim() === ""
+    ) {
+      throw new Error("Por favor, preencha todos os campos");
+    }
+  },
+
+  formatData() {
+    let { description, amount, date } = this.getValues();
+
+    amount = Utils.formatAmount(amount);
+    date = Utils.formatDate(date);
+
+    return {
+      description,
+      amount,
+      date,
+    };
+  },
+
+  saveTransaction(transaction) {
+    TransactionHandler.add(transaction);
+  },
+
+  clearFields() {
+    Form.description.value = "";
+    Form.amount.value = "";
+    Form.date.value = "";
+  },
+
+  submit(event) {
+    event.preventDefault();
+
+    try {
+      Form.validateFields();
+      const transaction = Form.formatData();
+      Form.saveTransaction(transaction);
+      Form.clearFields();
+      Modal.close();
+    } catch (error) {
+      alert(error.message);
+    }
+  },
+};
+
+const App = {
+  init() {
+    TransactionHandler.all.forEach((element, i) => {
+      DOM.addTransaction(element, i);
+    });
+
+    Storage.set(TransactionHandler.all);
+
+    DOM.updateBalance();
+  },
+  reload() {
+    DOM.clearTransactions();
+    this.init();
+  },
+};
+
+App.init();

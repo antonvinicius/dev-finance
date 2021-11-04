@@ -1,0 +1,2 @@
+// Objetos testes
+const transactions = [];
