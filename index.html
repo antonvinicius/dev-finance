@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Dev.finance</title>
+  </head>
+  <body>
+    <header>
+      <h1 id="logo">
+        <img src="./assets/logo.svg" alt="Logo dev.finance" />
+      </h1>
+    </header>
+
+    <main class="container">
+      <section id="balance">
+        <h2 class="sr-only">Balanço</h2>
+        <div class="card">
+          <h3>
+            <span>Entradas</span>
+            <img src="./assets/income.svg" alt="Image de Entradas" />
+          </h3>
+          <p>R$ 17.400,00</p>
+        </div>
+        <div class="card">
+          <h3>
+            <span>Saídas</span>
+            <img src="./assets/expense.svg" alt="Image de Saídas" />
+          </h3>
+          <p>R$ 17.400,00</p>
+        </div>
+        <div class="card total">
+          <h3>
+            <span>Total</span>
+            <img src="./assets/total.svg" alt="Image de Total" />
+          </h3>
+          <p>R$ 17.400,00</p>
+        </div>
+      </section>
+
+      <section id="transactions">
+        <h2 class="sr-only">Transações</h2>
+
+        <a href="#" onclick="toggleModal()" class="button new"
+          >+ Nova Transação</a
+        >
+
+        <div class="table-container">
+          <table id="data-table">
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Data</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="description">Desenvolvimento de site</td>
+                <td class="income">R$ 12.000,00</td>
+                <td class="date">13/04/2020</td>
+                <td>
+                  <a href="#"><img src="./assets/minus.svg" alt="Remover" /></a>
+                </td>
+              </tr>
+              <tr>
+                <td class="description">Internet</td>
+                <td class="expense">- R$ 152,00</td>
+                <td class="date">13/04/2020</td>
+                <td>
+                  <a href="#"><img src="./assets/minus.svg" alt="Remover" /></a>
+                </td>
+              </tr>
+              <tr>
+                <td class="description">Luz</td>
+                <td class="expense">- R$ 867,35</td>
+                <td class="date">13/04/2020</td>
+                <td>
+                  <a href="#"><img src="./assets/minus.svg" alt="Remover" /></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal-overlay" id="modal">
+      <div class="modal">
+        <div id="form">
+          <h2>Nova transação</h2>
+          <form action="">
+            <div class="input-group">
+              <label class="sr-only" for="description">Descrição</label>
+              <input
+                type="text"
+                id="description"
+                name="description"
+                placeholder="Descrição"
+              />
+            </div>
+            <div class="input-group">
+              <label class="sr-only" for="amount">Valor</label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                step="0.01"
+                placeholder="Valor"
+              />
+              <small class="help"
+                >Use o sinal - (negativo) para despesas e , (vírgula) para casas
+                decimais</small
+              >
+            </div>
+            <div class="input-group">
+              <label class="sr-only" for="date">Data</label>
+              <input type="date" id="date" name="date" />
+            </div>
+
+            <div class="input-group actions">
+              <a href="#" class="button cancel" onclick="toggleModal()"
+                >Cancelar</a
+              >
+              <button type="submit">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <h4>dev.finance$</h4>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
