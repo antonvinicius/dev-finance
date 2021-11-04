@@ -1,2 +1,0 @@
-// Objetos testes
-const transactions = [];

@@ -1,3 +1,5 @@
+const transactions = [];
+
 const Modal = {
   open() {
     document.getElementById("modal").classList.add("active");
