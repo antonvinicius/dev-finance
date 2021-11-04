@@ -28,28 +28,28 @@
             <span>Entradas</span>
             <img src="./assets/income.svg" alt="Image de Entradas" />
           </h3>
-          <p>R$ 17.400,00</p>
+          <p id="incomeDisplay">R$ 17.400,00</p>
         </div>
         <div class="card">
           <h3>
             <span>Saídas</span>
             <img src="./assets/expense.svg" alt="Image de Saídas" />
           </h3>
-          <p>R$ 17.400,00</p>
+          <p id="expenseDisplay">- R$ 17.400,00</p>
         </div>
         <div class="card total">
           <h3>
             <span>Total</span>
             <img src="./assets/total.svg" alt="Image de Total" />
           </h3>
-          <p>R$ 17.400,00</p>
+          <p id="totalDisplay">R$ 17.400,00</p>
         </div>
       </section>
 
       <section id="transactions">
         <h2 class="sr-only">Transações</h2>
 
-        <a href="#" onclick="toggleModal()" class="button new"
+        <a href="#" onclick="Modal.open()" class="button new"
           >+ Nova Transação</a
         >
 
@@ -63,32 +63,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="description">Desenvolvimento de site</td>
-                <td class="income">R$ 12.000,00</td>
-                <td class="date">13/04/2020</td>
-                <td>
-                  <a href="#"><img src="./assets/minus.svg" alt="Remover" /></a>
-                </td>
-              </tr>
-              <tr>
-                <td class="description">Internet</td>
-                <td class="expense">- R$ 152,00</td>
-                <td class="date">13/04/2020</td>
-                <td>
-                  <a href="#"><img src="./assets/minus.svg" alt="Remover" /></a>
-                </td>
-              </tr>
-              <tr>
-                <td class="description">Luz</td>
-                <td class="expense">- R$ 867,35</td>
-                <td class="date">13/04/2020</td>
-                <td>
-                  <a href="#"><img src="./assets/minus.svg" alt="Remover" /></a>
-                </td>
-              </tr>
-            </tbody>
+            <tbody id="transactions-body"></tbody>
           </table>
         </div>
       </section>
@@ -128,7 +103,7 @@
             </div>
 
             <div class="input-group actions">
-              <a href="#" class="button cancel" onclick="toggleModal()"
+              <a href="#" class="button cancel" onclick="Modal.close()"
                 >Cancelar</a
               >
               <button type="submit">Salvar</button>
@@ -142,6 +117,7 @@
       <h4>dev.finance$</h4>
     </footer>
 
+    <script src="./models/Transaction.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
